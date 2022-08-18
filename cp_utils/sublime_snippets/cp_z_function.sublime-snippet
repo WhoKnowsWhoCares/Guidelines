@@ -1,0 +1,20 @@
+<snippet>
+	<content><![CDATA[
+def z_function(s:str) -> list:
+	l = r = 0
+	z = [0]*len(s)
+	for i in range(1,len(s)):
+		if r >= i:
+			z[i] = min(z[i-l],r-i+1)
+		while z[i]+i < len(s) and s[z[i]] == s[z[i]+i]:
+			z[i] += 1
+		if i+z[i]-1 > r:
+			l = i
+			r = i+z[i]-1
+	return z
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>cp_z_func</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<!-- <scope>source.python</scope> -->
+</snippet>

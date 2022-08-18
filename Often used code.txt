@@ -1,0 +1,117 @@
+
+#UNIX
+ #Useful directories
+	/etc/systemd/system/								#Папка с описанием сервисов дл systemd
+	/etc/nginx/sites-available/
+ #General
+	lsb_release -a 										#Узнать сборку системы
+	ps aux | grep -i firefox 							#Поиск pid по имени
+	sudo su 											#Смена пользователя на root 
+	scp user@11.22.33.44:/home/user/file ~/Downloads/	#Скопировать файлы с сервера на текущ комп
+	autossh -N -R 2222:localhost:22 user@server			#Создать тунель с сервера 2222 на локалхост 22
+	sudo systemctl daemon-reload
+	sudo systemctl enable <service>
+	sudo systemctl start <service>
+ #General server config
+	apt update && apt upgrade -y						#Обновить сервер
+	sudo nano /etc/ssh/sshd_config						#После добавления ssh ключа
+		PasswordAuthentication no
+		RootLogin no
+	service ssh restart
+ #Generate ssh key
+	ssh-keygen -t rsa 									#На рабоче машине
+	ssh-copy-id root@server_name 						#На сервере
+ #Generate ssl certificate
+	sudo snap install core; sudo snap refresh core
+	sudo snap install --classic certbot
+	sudo ln -s /snap/bin/certbot /usr/bin/certbot		#ссылка на файл
+	sudo certbot --nginx
+
+	#UFW
+		https://help.ubuntu.com/community/UFW
+		
+	#TMUX
+		ctr+B default prefix -> nano .tmux.conf | set-oprion -g prefix C-a #Меняем префикс на ctr+A
+		tmux new-session -s <name> 							#Создать сессию
+		tmux attach -t <name>								#Присоединиться
+		ctr+A d												#Отсоединиться
+		ctr+A c												#Новое окно
+		ctr+A 0												#Перейти в 0 окно
+		ctr+A "												#Разбить по горизонтали
+		ctr+A %												#Разбить по вертикали
+		ctr+A <-/ ->
+		ctr+A h/j/k/l/o/tab 								#Навигация
+		ctr+A , 											#Переименование окна
+		ctr+A enter выделяем ctr+C q						#Копирование мышкой
+		ctr+A [ h/j/k/l выделяем y							#Копируем
+		ctr+A ]/B h/j/k/l									#Вставляем
+
+#DJANGO
+ #General
+	export PATH=$PATH:/home/<user>/.python/bin 			#Добавляем путь к питону
+	python -m venv env									#Настраиваем виртуальное окружение
+	source ./env/bin/activate	
+	pip install -U pip
+	pip install django
+	pip freeze > requirements.txt
+ #Project mngmt
+	mkdir dj_project; cd dj_project
+	django-admin startproject <project_name>			#Создание проекта ($django-admin получить лист команд)
+	<project_name>/manage.py startapp <app_name>		#Создание приложения
+	<project_name>/manage.py startserver 0.0.0.0:8000
+
+#UNICORN
+ #Settings for service
+	[Unit]
+	Description=gunicorn daemon
+	After=network.target
+	[Service]
+	User=alexander
+	Group=www-data
+	WorkingDirectory=/home/alexander/django-site/src
+	ExecStart=/home/alexander/django-site/env/bin/gunicorn 
+		--workers 3 
+		--bind unix:/home/alexander/django-site/gunicorn/gunicorn.sock config.wsgi:application 
+		--access-logfile /home/alexander/django-site/gunicorn/access.log 
+		--error-logfile /home/alexander/django-site/gunicorn/error.log
+	Restart=on-failure
+	[Install]
+	WantedBy=multi-user.target
+ #Set systemd
+	sudo systemctl daemon-reload
+	sudo systemctl start gunicorn
+	sudo systemctl enable gunicorn
+
+#NGINX
+ #Useful links
+	https://adamtheautomator.com/nginx-subdomain/
+ #Site config
+	sudo ln -s /etc/nginx/sites-available/site.conf /etc/nginx/sites-enabled/
+	add to /etc/nginx/sites-available/site.conf :
+	server {
+		listen 80;
+		server_name domain;
+
+		location /static/ {
+			root /home/alexander/django-site/static;
+		}
+		location / {
+			include proxy_params;
+			proxy_pass http://unix:/home/alexander/django-site/gunicorn/gunicorn.sock;
+		}
+	}
+	server{
+		listen 80;
+		server_name www.domain;
+		return 301 https://domain$request_uri;
+	}
+	sudo nginx -t
+	sudo service nginx restart
+
+#GIT
+	git tag <tag_name> <commit_sha> #тэгируем коммит
+	git reflog #история изменений
+
+#DVC
+
+#DOCKER

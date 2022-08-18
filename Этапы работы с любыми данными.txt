@@ -1,0 +1,75 @@
+# В общем
+    data = pd.read_csv('..')
+    data.head()	
+    pd.isnull(data).any()
+    data.info()
+    data.describe()
+    очистить выбросы
+    Ниже первого квартиля − 3*интерквартильный размах.
+    Выше третьего квартиля + 3*интерквартильный размах.
+    Проверить корреляцию
+    correlations_data = data.corr()['score'].sort_values()
+    PairGrid от seaborn
+    избавляемся от коррелирующих между собой признаков (VIF - В-корреляция)
+
+# Частые операции
+    df1.merge(df2, on='col')
+    df.isnull().sum() #проверить кол-во пропусков
+    df.drop(['col1','col2'], axis=1) #удалим колонки
+    df = pd.get_dummies(df) #one-hot encoding
+    df.fillna({'col1': df.col1.median()}) #заполнить пропуски медианным значением
+    df_long = pd.melt(df_wide,id_vars=['col1'],value_vars=['col2','col3']) #перевести датафрэйм из широкого в длинный формат, объединив пару колонок
+    df = series.to_frame().reset_index() #для преобразования серии в датафрейм
+    events_data['user_time'] = events_data.user_id.map(str) + '_' + events_data.timestamp.map(str) #можно в одной строке объединять несколько параметров в строке
+    df.applymap(lambda x: x+1) #применение функции к каждой ячейке отдельно
+    df.apply(np.mean, axis=0) #применение функции к колонке, axis=1 для строки
+
+#Операции для временных рядов ts - DataFrame с датой в индексе DatetimeIndex
+    ts.resample('1w').sum() #применяется для временных рядов для перегруппировки
+    ts.rolling(3, min_periods=1).mean() #скользящее окно фиксированного размера
+    ts.expanding().mean() #изменяющееся окно, для последнего значения - по всей колонке
+    ts.ewm(alpha=0.7).mean() #окно с экспоненциальным взвешиванием
+    ts.index.weekday_name.value_counts() #считаем количество дней недели в ряде
+    #операции numpy быстрее чем pandas
+
+# Разделение на train, test
+    from sklearn.model_selection import train_test_split
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.33, random_state=42)
+
+# Обучение, скор модели
+    from sklearn import tree
+    clf = tree.DecisionTreeClassifier(criterion='entropy', max_depth=5)
+    clf.fit(x_train,y_train)
+    clf.score(x_test,y_test)
+
+# Кросс-валидация
+    from sklearn.model_selection import cross_val_score
+    cross_val_score(clf, x_train, y_train, cv=5).mean()
+
+# Перебор параметров моделей
+    from sklearn.model_selection import GridSearchCV
+    clf = tree.DecisionTreeClassifier()
+    parameters = {'criterion':['gini','entropy'], 'max_depth':range(1,30)}
+    gscv_clf = GridSearchCV(clf, parameters, cv=5, n_jobs=-1)
+    gscv_clf.fit(x_train, y_train)
+    best_clf = gscv_clf.best_estimator_
+    best_param = gscv_clf.best_params_
+
+# Расчет precision, recall
+    from sklearn.metrics import precision_score, recall_score
+    y_pred = best_clf.predict(x_test)
+    precision_score(y_test, y_pred)
+    recall_score(y_test, y_pred)
+
+# Визуализация дерева (можно просто tree.plot_tree(clf, filled=True))
+    from graphviz import Source
+    from IPython.display import display, SVG
+    from IPython.display import HTML
+    style = '<style>svg(width:70% !important; height:70% !important;)</style>'
+    HTML(style)
+    graph = Source(tree.export_graphviz(clf, out_file=None, feature_names=list(x_train), class_names=['Fail','Success'], filled=True))
+    display(SVG(graph.pipe(format='svg')))
+
+# Отрисовка важности фичей
+    imp = pd.DataFrame(rf.feature_importances_, index=x_train.columns, columns=['importance'])
+    imp.sort_values('importance').plot(kind='barh', figsize=(12, 8))
