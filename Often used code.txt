@@ -109,6 +109,10 @@
 	sudo service nginx restart
 
 #GIT
+	git init
+	git add .
+	git commit -m 'initial commit'
+	git remote add origin git@github.com:
 	git tag <tag_name> <commit_sha> #тэгируем коммит
 	git reflog #история изменений
 
