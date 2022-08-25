@@ -20,31 +20,66 @@
 	service ssh restart
  #Generate ssh key
 	ssh-keygen -t rsa 									#На рабоче машине
-	ssh-copy-id root@server_name 						#На сервере
+	eval $(ssh-agent)
+	ssh-add ~/.ssh/<private_key>						#Добавим ключ агенту
+	ssh-copy-id root@server_name 						#Отправим на сервер
  #Generate ssl certificate
 	sudo snap install core; sudo snap refresh core
 	sudo snap install --classic certbot
 	sudo ln -s /snap/bin/certbot /usr/bin/certbot		#ссылка на файл
 	sudo certbot --nginx
+ #Wireguard
+	apt install wireguard
+	echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+	sysctl -p
+	cd /etc/wireguard
+	wg genkey | tee /etc/wireguard/privatekey | wg pubkey | tee /etc/wireguard/publickey
+	chmod 600 privatekey
+	nano wg0.conf
+	#Server config
+		[Interface]
+		PrivateKey = <server_private_key>
+		ListenPort = 51830
+		PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+		PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
 
-	#UFW
-		https://help.ubuntu.com/community/UFW
+		[Peer]
+		PublicKey = <client_public_key>
+		AllowedIps = 10.0.0.2/32
+	systemctl enable wg-quick@wg0.service
+	systemctl start wg-quick@wg0.service
+	wg genkey | tee /etc/wireguard/<name>_privatekey | wg pubkey | tee /etc/wireguard/<name>_publickey
+	nano client.conf
+	#Client config
+		[Interface]
+		PrivateKey = <client_private_key>
+		Address = 10.0.0.2/32
+		DNS = 1.1.1.1, 8.8.8.8
 		
-	#TMUX
-		ctr+B default prefix -> nano .tmux.conf | set-oprion -g prefix C-a #Меняем префикс на ctr+A
-		tmux new-session -s <name> 							#Создать сессию
-		tmux attach -t <name>								#Присоединиться
-		ctr+A d												#Отсоединиться
-		ctr+A c												#Новое окно
-		ctr+A 0												#Перейти в 0 окно
-		ctr+A "												#Разбить по горизонтали
-		ctr+A %												#Разбить по вертикали
-		ctr+A <-/ ->
-		ctr+A h/j/k/l/o/tab 								#Навигация
-		ctr+A , 											#Переименование окна
-		ctr+A enter выделяем ctr+C q						#Копирование мышкой
-		ctr+A [ h/j/k/l выделяем y							#Копируем
-		ctr+A ]/B h/j/k/l									#Вставляем
+		[Peer]
+		PublicKey = <server_public_key>
+		Endpoint = <ip>:51830
+		AllowedIPs = 0.0.0.0/0, ::/0
+		PersistentKeepalive = 20
+	system restart wg-quick@wg0.service
+ #UFW
+	https://help.ubuntu.com/community/UFW
+	
+ #TMUX
+	ctr+B default prefix -> nano .tmux.conf | set-oprion -g prefix C-a #Меняем префикс на ctr+A
+	tmux new-session -s <name> 							#Создать сессию
+	tmux attach -t <name>								#Присоединиться
+	ctr+A d												#Отсоединиться
+	ctr+A c												#Новое окно
+	ctr+A 0												#Перейти в 0 окно
+	ctr+A "												#Разбить по горизонтали
+	ctr+A %												#Разбить по вертикали
+	ctr+A <-/ ->
+	ctr+A h/j/k/l/o/tab 								#Навигация
+	ctr+A , 											#Переименование окна
+	ctr+A enter выделяем ctr+C q						#Копирование мышкой
+	ctr+A [ h/j/k/l выделяем y							#Копируем
+	ctr+A ]/B h/j/k/l									#Вставляем
 
 #DJANGO
  #General
