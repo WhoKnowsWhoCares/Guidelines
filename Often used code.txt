@@ -1,7 +1,7 @@
 
 #UNIX
  #Useful directories
-	/etc/systemd/system/								#Папка с описанием сервисов дл systemd
+	/etc/systemd/system/							#Папка с описанием сервисов дл systemd
 	/etc/nginx/sites-available/
  #General
 	lsb_release -a 										#Узнать сборку системы
@@ -84,16 +84,16 @@
 
 #DJANGO
  #General
-	export PATH=$PATH:/home/<user>/.python/bin 			#Добавляем путь к питону
-	python -m venv env									#Настраиваем виртуальное окружение
+	export PATH=$PATH:/home/<user>/.python/bin 				#Добавляем путь к питону
+	python -m venv env							#Настраиваем виртуальное окружение
 	source ./env/bin/activate	
 	pip install -U pip
 	pip install django
 	pip freeze > requirements.txt
  #Project mngmt
 	mkdir dj_project; cd dj_project
-	django-admin startproject <project_name>			#Создание проекта ($django-admin получить лист команд)
-	<project_name>/manage.py startapp <app_name>		#Создание приложения
+	django-admin startproject <project_name>				#Создание проекта ($django-admin получить лист команд)
+	<project_name>/manage.py startapp <app_name>				#Создание приложения
 	<project_name>/manage.py startserver 0.0.0.0:8000
 
 	python manage.py makemigrations						# Создать снимок классов для сохранения в базу
