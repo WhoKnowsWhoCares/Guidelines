@@ -1,4 +1,7 @@
 __author__ = 'Alexander'
+#TIPS: стараться использовать типы соответствующие данным
+#      стараться не использовать apply, вместо него исп where, select, vectorize, pipe
+
 # Обеспечим совместимость с Python 2 и 3
 # pip install future
 from __future__ import (absolute_import, division,
@@ -92,6 +95,14 @@ df.drop([1, 2]).head() # а вот так можно удалить строчк
 def tweak_data(autos):
     cols = ['','']
     values = {'Ford','Dodge','Tesla'}
+    conditions = [
+        autos.date_col1 == autos.date_col2,
+        autos.norm_status.str.startswith('CLI')
+    ]
+    choices = [
+        'New Lead',
+        'Client Lead'
+    ]
     return (autos
         [cols]
         .assign(cylinders=autos.cylinders.fillna(0).astype('int8'),
@@ -100,6 +111,7 @@ def tweak_data(autos):
                 automatic=autos.trany.str.contains('Auto'),
                 country=lambda df_: df_.country.where(df_.make.isin(values),'US','Other'),
                 country2=np.where(autos.make.isin(values),'US','Other'),
+                leadcat=np.select(conditions, choices, default='NA'),
                 speeds=autos.trany.str.extract(r'(\d)+').fillna('20').astype('int8'),
                 createdOn=pd.to_datetime(autos.createdOn.replace({'EDT':'-03:00'}, regex=True)),
                 ewm=lambda df_: df_.speeds.ewm(alpha=.7).mean(),
