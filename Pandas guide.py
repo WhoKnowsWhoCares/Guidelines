@@ -86,3 +86,50 @@ df['Total charge'] = df['Total day charge'] + df['Total eve charge'] + df['Total
 # и требуемое значение параметра axis (1, если удаляете столбцы, и ничего или 0, если удаляете строки):
 df = df.drop(['Total charge', 'Total calls'], axis=1) # избавляемся от созданных только что столбцов
 df.drop([1, 2]).head() # а вот так можно удалить строчки
+
+#ПРИМЕРЫ КОДА
+
+def tweak_data(autos):
+    cols = ['','']
+    values = {'Ford','Dodge','Tesla'}
+    return (autos
+        [cols]
+        .assign(cylinders=autos.cylinders.fillna(0).astype('int8'),
+                displ=autos.displ.fillna(0).astype('float32'),
+                drive=autos.drive.fillna('Other').astype('category'),
+                automatic=autos.trany.str.contains('Auto'),
+                country=lambda df_: df_.country.where(df_.make.isin(values),'US','Other'),
+                country2=np.where(autos.make.isin(values),'US','Other'),
+                speeds=autos.trany.str.extract(r'(\d)+').fillna('20').astype('int8'),
+                createdOn=pd.to_datetime(autos.createdOn.replace({'EDT':'-03:00'}, regex=True)),
+                ewm=lambda df_: df_.speeds.ewm(alpha=.7).mean(),
+                s = lambda df_: df_.speeds.shift())
+        .astype({'highway08':'int8', 'make':'category'})
+        #debug pipe
+        .pipe(lambda df_: display(df_) or df_)
+        .drop(columns=['trany'])
+        .memory_usage(deep=True).sum()
+    )
+
+def plot(autos):
+    return (autos
+        .groupby('year')
+        [['comb08','speeds']]
+        # .median()
+        .quantile(.1)
+        .plot()
+    )
+
+def plot2(autos):
+    def second_to_last(ser):
+        return ser.iloc[-2]
+    return (autos
+        .groupby(['year','country'])
+        .agg(['min','mean',second_to_last])
+        .unstack()
+        .city08
+        .rolling(2)
+        .mean()
+        .plot()
+        .legend(bbox_to_anchor=(1,1))
+    )

@@ -5,6 +5,7 @@
 	/etc/nginx/sites-available/
  #General
 	lsb_release -a 										#Узнать сборку системы
+	nvidia-smi											#Инфо по ресурсам видеокарты
 	ps aux | grep -i firefox 							#Поиск pid по имени
 	sudo su 											#Смена пользователя на root 
 	scp user@11.22.33.44:/home/user/file ~/Downloads/	#Скопировать файлы с сервера на текущ комп
@@ -95,6 +96,14 @@
 	<project_name>/manage.py startapp <app_name>		#Создание приложения
 	<project_name>/manage.py startserver 0.0.0.0:8000
 
+	python manage.py makemigrations						# Создать снимок классов для сохранения в базу
+	python manage.py migrate
+	# Не забыть при первом старте проинициализировать БД: python manage.py makemigrations main 
+	python manage.py sqlmigrate main 0001				# Для восстановления одной из миграций указать App, version
+	python manage.py shell								# Использование питона для работы с объектами проекта
+	python manage.py createsuperuser					# Создание админской учетки
+	pip freeze > requiremints.txt						# Сохранить список необходимых пакетов
+
 #UNICORN
  #Settings for service
 	[Unit]
@@ -143,14 +152,81 @@
 	sudo nginx -t
 	sudo service nginx restart
 
+#Jupyter
+	
+
 #GIT
+ #General
+	git config --global user.name "Alexander"
+	git config --global user.email "as.frantsev@gmail.com"
+	git config pull.rebase true
+ #Имеем репозиторий
 	git init
+	git remote add origin git@github.com:<user>/<repository>.git
 	git add .
 	git commit -m 'initial commit'
-	git remote add origin git@github.com:
-	git tag <tag_name> <commit_sha> #тэгируем коммит
-	git reflog #история изменений
-
+	git push -u origin main
+ #Копируем из 
+	fit clone git@github.com:<user>/<repository>.git
+	git rm <file_name>
+	git tag -a <tag_name> -m '<description>' 	#тэгируем коммит
+	git reflog 									#история изменений
+	git show <commit_sha>						#посмотреть коммит
+	git restore <file_name> (--staged)			#вернуть изменения (если уже в индексе)
+	git diff (--staged)							#сравнение с последним коммитом
+	git checkout master							#переключение на ветку master
+	git fetch branch1							#обновить инфо по ветке branch1
+	git merge branch1							#к текущей ветке примерджить ветку branch1
+	git branch -d branch1						#удалить branch1
+	git rebase
+ #Стратегии ветвления
+	#Git Flow
+	Ключевая ветка main, develop рабочая ветка, от которой отпочковываются ветки feature и release
+	После тестирования release она сливается в master. От master может создаваться hotfix
+	Удобна: Надежная удобная система для редких релизов, можно поддерживать несколько версий.
+	Неудобна: Для частого CI/CD, сложный merge крупных фичей
+	#GitHub Flow
+	Есть одна ветка main, от которой отпочковываются feature, 
+	При сливании обновляем ветку из master, происходит тестирование, deploy pre-prod, мониторинг, слив в master
+	#GitLab Flow
+	Похоже на GitHub, но есть отдельная ветка production в которую сливают из master
+ #Версионирование
+	#SemVer
+	breaking.feature.fix(major.minor.patch) breaking-несовместимость в изменениях, feature-совместимая функциональность
+	#PEP440
+	major.minor.micro
+	
 #DVC
+	dvc init									#инициализация в проекте
+	commit dvc init								#коммит в dvc
+	git commit -m "initialize dvc"				#коммит в git
+	dvc add data/<filename.csv>					#добавить файл в отслеживаемые
+	dvc run -f <dvc_script_name>.dvc \
+			-d <dependencie_name> \
+			-o <output_name> \
+			-m <metrics_file_name> \
+			python <py_script_name>.py
+	dvc metrics show							#показывает метрики из файла <metrics_file_name>
+	dvc plots show
+	dvc remote add -d <name> <url_path>			#добавить удаленное хранилище
+	dvc push / pull								#загрузить/скачать из удаленного репозитория
+	git checkout <tag>							#переключиться на гит
+	dvc checkout 								#скачать файлы нужной ветки гита
+	dvc repro									#воспроизвести пайплайн
 
 #DOCKER
+
+#Poetry
+	poetry config virtualenvs.in-project true
+	poetry init									#инициализация нового проекта
+	poetry env use <path_to_python>
+	poetry install 								#установка зависимостей
+	poetry update								#обновление зависимостей
+	poetry show --tree 
+	poetry show --latest
+	poetry build								#собрать наш пакет
+	poetry publish								#публикация на pypi
+	poetry run python <file_name>
+	poetry add (--dev) <package_name>			#установка пакета (только dev)
+	poetry lock									#фиксация зависимостей для прода
+	

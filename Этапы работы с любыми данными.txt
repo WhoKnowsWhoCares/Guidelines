@@ -14,22 +14,22 @@
 
 # Частые операции
     df1.merge(df2, on='col')
-    df.isnull().sum() #проверить кол-во пропусков
-    df.drop(['col1','col2'], axis=1) #удалим колонки
-    df = pd.get_dummies(df) #one-hot encoding
-    df.fillna({'col1': df.col1.median()}) #заполнить пропуски медианным значением
+    df.isnull().sum()                                                   #проверить кол-во пропусков
+    df.drop(['col1','col2'], axis=1)                                    #удалим колонки
+    df = pd.get_dummies(df)                                             #one-hot encoding
+    df.fillna({'col1': df.col1.median()})                               #заполнить пропуски медианным значением
     df_long = pd.melt(df_wide,id_vars=['col1'],value_vars=['col2','col3']) #перевести датафрэйм из широкого в длинный формат, объединив пару колонок
-    df = series.to_frame().reset_index() #для преобразования серии в датафрейм
+    df = series.to_frame().reset_index()                                #для преобразования серии в датафрейм
     events_data['user_time'] = events_data.user_id.map(str) + '_' + events_data.timestamp.map(str) #можно в одной строке объединять несколько параметров в строке
-    df.applymap(lambda x: x+1) #применение функции к каждой ячейке отдельно
-    df.apply(np.mean, axis=0) #применение функции к колонке, axis=1 для строки
+    df.applymap(lambda x: x+1)                                          #применение функции к каждой ячейке отдельно
+    df.apply(np.mean, axis=0)                                           #применение функции к колонке, axis=1 для строки
 
 #Операции для временных рядов ts - DataFrame с датой в индексе DatetimeIndex
-    ts.resample('1w').sum() #применяется для временных рядов для перегруппировки
-    ts.rolling(3, min_periods=1).mean() #скользящее окно фиксированного размера
-    ts.expanding().mean() #изменяющееся окно, для последнего значения - по всей колонке
-    ts.ewm(alpha=0.7).mean() #окно с экспоненциальным взвешиванием
-    ts.index.weekday_name.value_counts() #считаем количество дней недели в ряде
+    ts.resample('1w').sum()                                             #применяется для временных рядов для перегруппировки
+    ts.rolling(3, min_periods=1).mean()                                 #скользящее окно фиксированного размера
+    ts.expanding().mean()                                               #изменяющееся окно, для последнего значения - по всей колонке
+    ts.ewm(alpha=0.7).mean()                                            #окно с экспоненциальным взвешиванием
+    ts.index.weekday_name.value_counts()                                #считаем количество дней недели в ряде
     #операции numpy быстрее чем pandas
 
 # Разделение на train, test
