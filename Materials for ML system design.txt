@@ -1,0 +1,40 @@
+ML System Design materials
+https://ods.ai/tracks/ml-system-design-22
+
+Practical ML
+	How to avoid machine learning pitfalls: a guide for academic researchers			
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/09/26/406eb7b6/2108.02497v1.pdf
+	Hidden Technical Debt in Machine Learning Systems
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/09/26/ee8e00cc/NIPS_2015_hidden_technical_debt_in_machine_learning_systems_Paper.pdf
+	Rules of Machine Learning: Best Practices for ML Engineering
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/09/26/a161f9e0/rules_of_ml.pdf
+Basic ML design approach
+	The Netflix Recommender System: Algorithms, Business Value, and Innovation
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/03/515429d1/2843948.pdf
+	Trustworthy Online Controlled Experiments: Five Puzzling Outcomes Explained
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/03/6ea63b61/Five%20Puzzling%20Outcomes%20Explained.pdf
+	Top Challenges from the first Practical Online Controlled Experiments Summit
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/03/587fd676/top_challenges_from_the_first_practical_online_controlled_experiments.pdf
+Learning Data
+	Practice of Efficient Data Collection via Crowdsourcing at Large-Scale
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/11/714062bc/1912.04444.pdf
+	Bayesian active learning for production, a systematic study and a reusable library
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/11/ee0ce492/2006.09916.pdf
+	A General-Purpose Crowdsourcing Computational Quality Control Toolkit for Python
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/11/42eb1349/2109.08584.pdf
+	Can I use this publicly available dataset to build commercial AI software? Most likely not
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/11/5e910232/2111.02374v1.pdf
+	A Survey on Programmatic Weak Supervision
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/11/56f8c4e1/2202.05433.pdf
+Data preparation, feature extraction
+	EDA: Easy Data Augmentation Techniques for Boosting Performance on Text Classification Tasks
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/16/c0d3d503ca82/1901.11196.pdf
+	MEMO: Test Time Robustness via Adaptation and Augmentation
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/16/bacb049a3411/2110.09506.pdf
+	Albumentations: Fast and Flexible Image Augmentations
+		https://storage.yandexcloud.net/ds-ods/files/content/2022/10/16/f62deda25c78/information-11-00125.pdf
+Model Evaluation
+	Model Evaluation, Model Selection, and Algorithm Selection in Machine Learning 
+		https://drive.google.com/file/d/1L1JFACm23N-lzN0tP8GE_1yn7Cw3WNTK/view
+		
+		
