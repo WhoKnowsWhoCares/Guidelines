@@ -134,7 +134,7 @@ def train(model: torch.nn.Module,
           loss_fn: torch.nn.Module,
           epochs: int,
           device: torch.device, 
-          writer: torch.utils.tensorboard.writer.SummaryWriter # new parameter to take in a writer
+          writer: torch.utils.tensorboard.writer.SummaryWriter = None # new parameter to take in a writer
           ) -> Dict[str, List]:
     """Trains and tests a PyTorch model.
 
