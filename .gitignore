@@ -1,2 +1,5 @@
 .vscode/
 .ipynb_checkpoints/
+runs/
+models/
+NN
