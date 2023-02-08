@@ -10,6 +10,8 @@
 	sudo su 								#Смена пользователя на root 
 	scp user@11.22.33.44:/home/user/file ~/Downloads/			#Скопировать файлы с сервера на текущ комп
 	autossh -N -R 2222:localhost:22 user@server				#Создать тунель с сервера 2222 на локалхост 22
+	chmod 600 <file>
+	sudo netstat -tupln
 	sudo systemctl daemon-reload
 	sudo systemctl enable <service>
 	sudo systemctl start <service>
@@ -65,6 +67,9 @@
 		AllowedIPs = 0.0.0.0/0, ::/0
 		PersistentKeepalive = 20
 	system restart wg-quick@wg0.service
+	
+	sudo systemctl status wg-quick@wg_lenovo.service			#Управление из командной строки
+	
  #UFW
 	https://help.ubuntu.com/community/UFW
 	
@@ -105,6 +110,22 @@
 	python manage.py shell							#Использование питона для работы с объектами проекта
 	python manage.py createsuperuser					#Создание админской учетки
 	pip freeze > requiremints.txt						#Сохранить список необходимых пакетов
+	
+#FLASK
+ #Project mngmt
+ 	$ export FLASK_APP=hello.py						#Указываем точку входа
+	$ export FLASK_DEBUG=1							#Режим дебага
+	$ export FLASK_ENV=development
+	$ flask run								#Старт приложения
+	$ flask db upgrade							#Обновить базы данных
+	
+	$ flask shell								#Добавление в базу через командную строку
+	> from hello import User
+	> user_john = User(username='john')
+	> db.session.add_all([user_john])
+	> db.session.commit()
+	
+	$ flask test								#Прогнать тесты
 
 #UNICORN
  #Settings for service
@@ -154,7 +175,18 @@
 	sudo nginx -t
 	sudo service nginx restart
 
-#Jupyter
+#POSTGRES
+ #General
+ 	$ sudo -u postgres psql							#Переход в командную строку
+ 	\q									#Выход из еомандной строки
+ 	createuser --interactive
+ 	create user tester with password 'password';
+	alter user tester superuser;
+	
+ 	createdb <db_name>;
+ 	create database site_db;
+	grant all privileges on database site_db to tester;
+ 	
 	
 
 #GIT
@@ -175,9 +207,11 @@
 	git reflog 								# история изменений
 	git show <commit_sha>							# посмотреть коммит
 	git restore <file_name> (--staged)					# вернуть изменения (если уже в индексе)
+	git reset (--hard)							# вернуть все изменения к глобальной версии
 	git diff (--staged)							# сравнение с последним коммитом
+	git diff branch1 branch2						# сравнить 2 ветки
 	git checkout master							# переключение на ветку master
-	git fetch branch1							# обновить инфо по ветке branch1
+	git fetch branch1							# обновить инфо по ветке branch1 из глобального репо
 	git merge branch1							# к текущей ветке примерджить ветку branch1
 	git branch -d branch1							# удалить branch1
 	git rebase
@@ -217,7 +251,10 @@
 	dvc repro								#воспроизвести пайплайн
 
 #DOCKER
-
+	docker ps
+	docker volume create <volume_name>
+	docker network create <network_name>
+	
 #Poetry
 	poetry config virtualenvs.in-project true
 	cat requirements.txt | xargs poetry add					#загрузить зависимости из requirements.txt
@@ -232,4 +269,5 @@
 	poetry run python <file_name>
 	poetry add (--dev) <package_name>					#установка пакета (только dev)
 	poetry lock								#фиксация зависимостей для прода
+	poetry export -f requirements.txt --without-hashes > requirements.txt	#Сохранение зависимостей в файл
 	
