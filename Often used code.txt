@@ -5,6 +5,7 @@
 	/etc/nginx/sites-available/
  #General
 	lsb_release -a 								#Узнать сборку системы
+	lsblk												#Список подключеных устройств
 	nvidia-smi								#Инфо по ресурсам видеокарты
 	ps aux | grep -i firefox 						#Поиск pid по имени
 	sudo su 								#Смена пользователя на root 
@@ -72,6 +73,10 @@
 	
  #UFW
 	https://help.ubuntu.com/community/UFW
+	
+	sudo ufw status verbose
+	sudo ufw allow 80
+	sudo ufw deny 4000
 	
  #TMUX
 	ctr+B default prefix -> nano .tmux.conf | set-oprion -g prefix C-a #Меняем префикс на ctr+A
@@ -254,7 +259,25 @@
 	docker ps
 	docker volume create <volume_name>
 	docker network create <network_name>
-	
+		sudo curl -fsSL get.docker.com | sh			#установка
+	sudo gpasswd -a $USER docker
+	newgrp docker
+
+	docker pull <cont_name>						#скачать образ
+	docker images								#список доступных образов
+	docker ps -a 								#список всех использованных котейнеров
+	docker rm 0529d842a4 ff0a34kb				#удалет 2 контейнера по их ID
+	docker rm $(docker ps -a -q -f status=exited) #удалет все завершенные контейнеры
+	docker stop 0529d842a4						#остановка контейнера
+	docker run -d -P -rm --name <friendly_name> <cont_name>
+		-d (detached) в отдельном процессе
+		-P открытые порты делает публичными
+		-rm авто удаление после остановки
+		-p 8888:80 перенаправление одного порта
+		--name <friendly_name> присвоет имя для удобства
+	docker port <friendly_name>					#список используемых портов
+
+
 #Poetry
 	poetry config virtualenvs.in-project true
 	cat requirements.txt | xargs poetry add					#загрузить зависимости из requirements.txt
@@ -271,3 +294,12 @@
 	poetry lock								#фиксация зависимостей для прода
 	poetry export -f requirements.txt --without-hashes > requirements.txt	#Сохранение зависимостей в файл
 	
+	
+#Home Assistant
+  https://ihome.frantstech.site/hassio/system
+  #Workaround with portainer
+	sudo docker stop portainer
+	sudo docker restart hassio_supervisor
+	Update HA and then you can start portainer again (sudo docker start portainer)
+  #Workaround 2
+	ha jobs options --ignore-conditions healthy
