@@ -27,7 +27,7 @@
  #Generate ssh key
 	ssh-keygen -t rsa 							#На рабоче машине
 	eval $(ssh-agent)
-	ssh-add ~/.ssh/<private_key>						#Добавим ключ агенту
+	ssh-add -k ~/.ssh/<private_key>						#Добавим ключ агенту
 	ssh-copy-id root@server_name 						#Отправим на сервер
  #Generate ssl certificate
 	sudo snap install core; sudo snap refresh core
@@ -35,7 +35,7 @@
 	sudo ln -s /snap/bin/certbot /usr/bin/certbot		#ссылка на файл
 	sudo certbot --nginx
  #Wireguard
-	apt install wireguard
+	apt install wireguard			
 	echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 	sysctl -p
 	cd /etc/wireguard
@@ -118,7 +118,7 @@
 	python manage.py migrate
 	# Не забыть при первом старте проинициализировать БД: python manage.py makemigrations main 
 	python manage.py sqlmigrate main 0001					#Для восстановления одной из миграций указать App, version
-	python manage.py shell							#Использование питона для работы с объектами проекта
+	python manage.py shell								#Использование питона для работы с объектами проекта
 	python manage.py createsuperuser					#Создание админской учетки
 	pip freeze > requiremints.txt						#Сохранить список необходимых пакетов
 	
@@ -127,16 +127,16 @@
  	$ export FLASK_APP=hello.py						#Указываем точку входа
 	$ export FLASK_DEBUG=1							#Режим дебага
 	$ export FLASK_ENV=development
-	$ flask run								#Старт приложения
-	$ flask db upgrade							#Обновить базы данных
+	$ flask run										#Старт приложения
+	$ flask db upgrade								#Обновить базы данных
 	
-	$ flask shell								#Добавление в базу через командную строку
+	$ flask shell									#Добавление в базу через командную строку
 	> from hello import User
 	> user_john = User(username='john')
 	> db.session.add_all([user_john])
 	> db.session.commit()
 	
-	$ flask test								#Прогнать тесты
+	$ flask test									#Прогнать тесты
 
 #UNICORN
  #Settings for service
@@ -189,7 +189,7 @@
 #POSTGRES
  #General
  	$ sudo -u postgres psql							#Переход в командную строку
- 	\q									#Выход из еомандной строки
+ 	\q												#Выход из еомандной строки
  	createuser --interactive
  	create user tester with password 'password';
 	alter user tester superuser;
@@ -215,7 +215,7 @@
 	fit clone git@github.com:<user>/<repository>.git
 	git rm <file_name>
 	git tag -a <tag_name> -m '<description>' 	#тэгируем коммит
-	git reflog 								# история изменений
+	git reflog 									# история изменений
 	git show <commit_sha>							# посмотреть коммит
 	git restore <file_name> (--staged)					# вернуть изменения (если уже в индексе)
 	git reset (--hard)							# вернуть все изменения к глобальной версии
@@ -244,7 +244,7 @@
 	major.minor.micro
 	
 #DVC
-	dvc init								#инициализация в проекте
+	dvc init									#инициализация в проекте
 	commit dvc init								#коммит в dvc
 	git commit -m "initialize dvc"						#коммит в git
 	dvc add data/<filename.csv>						#добавить файл в отслеживаемые
@@ -259,7 +259,7 @@
 	dvc push / pull								#загрузить/скачать из удаленного репозитория
 	git checkout <tag>							#переключиться на гит
 	dvc checkout 								#скачать файлы нужной ветки гита
-	dvc repro								#воспроизвести пайплайн
+	dvc repro									#воспроизвести пайплайн
 
 #DOCKER
 	docker ps
@@ -286,8 +286,8 @@
 
 #Poetry
 	poetry config virtualenvs.in-project true
-	cat requirements.txt | xargs poetry add					#загрузить зависимости из requirements.txt
-	poetry init								#инициализация нового проекта
+	cat requirements.txt | xargs poetry add		#загрузить зависимости из requirements.txt
+	poetry init									#инициализация нового проекта
 	poetry env use <path_to_python>
 	poetry install 								#установка зависимостей
 	poetry update								#обновление зависимостей
@@ -296,8 +296,8 @@
 	poetry build								#собрать наш пакет
 	poetry publish								#публикация на pypi
 	poetry run python <file_name>
-	poetry add (--dev) <package_name>					#установка пакета (только dev)
-	poetry lock								#фиксация зависимостей для прода
+	poetry add (--dev) <package_name>			#установка пакета (только dev)
+	poetry lock									#фиксация зависимостей для прода
 	poetry export -f requirements.txt --without-hashes > requirements.txt	#Сохранение зависимостей в файл
 	
 	
