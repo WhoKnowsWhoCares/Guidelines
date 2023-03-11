@@ -79,7 +79,13 @@
 	sudo ufw deny 4000
 	
  #TMUX
-	ctr+B default prefix -> nano .tmux.conf | set-oprion -g prefix C-a #Меняем префикс на ctr+A
+	https://losst.pro/shpargalka-po-tmux
+	
+	ctr+B default prefix -> nano .tmux.conf | set-option -g prefix C-a #Меняем префикс на ctr+A
+	~/.tmux.conf.local							#Локальный конфиг
+	tmux ls									#Список сессий
+	tmux kill-server 
+	tmux kill-session -t <name>
 	tmux new-session -s <name> 						#Создать сессию
 	tmux attach -t <name>							#Присоединиться
 	ctr+A d									#Отсоединиться
@@ -88,11 +94,11 @@
 	ctr+A "									#Разбить по горизонтали
 	ctr+A %									#Разбить по вертикали
 	ctr+A <-/ ->
-	ctr+A h/j/k/l/o/tab 							#Навигация
+	ctr+A o		 							#Навигация
 	ctr+A , 								#Переименование окна
 	ctr+A enter выделяем ctr+C q						#Копирование мышкой
-	ctr+A [ h/j/k/l выделяем y						#Копируем
-	ctr+A ]/B h/j/k/l							#Вставляем
+	ctr+A [ выделить ctr+space, ctr+w для копирования			#Копируем
+	ctr+A ]									#Вставляем
 
 #DJANGO
  #General
