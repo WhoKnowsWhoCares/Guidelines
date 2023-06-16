@@ -245,27 +245,32 @@
 	
 #DVC
 	dvc init									#инициализация в проекте
-	commit dvc init								#коммит в dvc
-	git commit -m "initialize dvc"						#коммит в git
-	dvc add data/<filename.csv>						#добавить файл в отслеживаемые
+	git commit -m "initialize dvc"				#коммит в git
+	dvc remote add -d <name> <url_path>			#добавить удаленное хранилище
+	dvc push / pull								#загрузить/скачать из удаленного репозитория
+	dvc add data/<filename.csv>					#добавить файл в отслеживаемые
 	dvc run -f <dvc_script_name>.dvc \
 			-d <dependencie_name> \
 			-o <output_name> \
 			-m <metrics_file_name> \
 			python <py_script_name>.py
-	dvc metrics show							#показывает метрики из файла <metrics_file_name>
-	dvc plots show
-	dvc remote add -d <name> <url_path>					#добавить удаленное хранилище
-	dvc push / pull								#загрузить/скачать из удаленного репозитория
 	git checkout <tag>							#переключиться на гит
 	dvc checkout 								#скачать файлы нужной ветки гита
 	dvc repro									#воспроизвести пайплайн
+	dvc dag 									#визуализация
+	dvc metrics show							#показывает метрики (указанные в dvc.yaml)
+	dvc plots show								#показывает графики (указанные в dvc.yaml)
+	dvc params diff								#разница параметров (указанных в dvc.yaml)
+	dvc metrics diff							#разница в метриках (указанных в dvc.yaml)
+	dvc plots diff								#разница в графиках (указанных в dvc.yaml)
+	dvc exp run
+	dvc exp show
 
 #DOCKER
 	docker ps
 	docker volume create <volume_name>
 	docker network create <network_name>
-		sudo curl -fsSL get.docker.com | sh			#установка
+	sudo curl -fsSL get.docker.com | sh			#установка
 	sudo gpasswd -a $USER docker
 	newgrp docker
 
