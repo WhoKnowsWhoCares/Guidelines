@@ -67,8 +67,9 @@
 		Endpoint = <ip>:51830
 		AllowedIPs = 0.0.0.0/0, ::/0
 		PersistentKeepalive = 20
-	system restart wg-quick@wg0.service
+	systemctl restart wg-quick@wg0.service
 	
+	sudo wg setconf wg0 wg_lenovo.conf
 	sudo systemctl status wg-quick@wg_lenovo.service			#Управление из командной строки
 	
  #UFW
