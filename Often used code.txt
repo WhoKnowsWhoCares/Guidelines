@@ -245,11 +245,11 @@
 	major.minor.micro
 	
 #DVC
-	dvc init									#инициализация в проекте
-	git commit -m "initialize dvc"				#коммит в git
-	dvc remote add -d <name> <url_path>			#добавить удаленное хранилище
+	dvc init								#инициализация в проекте
+	git commit -m "initialize dvc"						#коммит в git
+	dvc remote add -d <name> <url_path>					#добавить удаленное хранилище
 	dvc push / pull								#загрузить/скачать из удаленного репозитория
-	dvc add data/<filename.csv>					#добавить файл в отслеживаемые
+	dvc add data/<filename.csv>						#добавить файл в отслеживаемые
 	dvc run -f <dvc_script_name>.dvc \
 			-d <dependencie_name> \
 			-o <output_name> \
@@ -257,8 +257,8 @@
 			python <py_script_name>.py
 	git checkout <tag>							#переключиться на гит
 	dvc checkout 								#скачать файлы нужной ветки гита
-	dvc repro									#воспроизвести пайплайн
-	dvc dag 									#визуализация
+	dvc repro								#воспроизвести пайплайн
+	dvc dag 								#визуализация
 	dvc metrics show							#показывает метрики (указанные в dvc.yaml)
 	dvc plots show								#показывает графики (указанные в dvc.yaml)
 	dvc params diff								#разница параметров (указанных в dvc.yaml)
@@ -271,29 +271,31 @@
 	docker ps
 	docker volume create <volume_name>
 	docker network create <network_name>
-	sudo curl -fsSL get.docker.com | sh			#установка
+	sudo curl -fsSL get.docker.com | sh					#установка
 	sudo gpasswd -a $USER docker
 	newgrp docker
 
-	docker pull <cont_name>						#скачать образ
+	docker pull <cont_name>							#скачать образ
 	docker images								#список доступных образов
 	docker ps -a 								#список всех использованных котейнеров
-	docker rm 0529d842a4 ff0a34kb				#удалет 2 контейнера по их ID
-	docker rm $(docker ps -a -q -f status=exited) #удалет все завершенные контейнеры
-	docker stop 0529d842a4						#остановка контейнера
+	docker rm 0529d842a4 ff0a34kb						#удалет 2 контейнера по их ID
+	docker rm $(docker ps -a -q -f status=exited) 				#удалет все завершенные контейнеры
+	docker stop 0529d842a4							#остановка контейнера
 	docker run -d -P -rm --name <friendly_name> <cont_name>
 		-d (detached) в отдельном процессе
 		-P открытые порты делает публичными
 		-rm авто удаление после остановки
 		-p 8888:80 перенаправление одного порта
 		--name <friendly_name> присвоет имя для удобства
-	docker port <friendly_name>					#список используемых портов
+	docker port <friendly_name>						#список используемых портов
+	sudo docker exec -it <docker_name> bash					#зайти в командную строку контейнера
+	docker logs <docker_name>						#логи контейнера
 
 
 #Poetry
 	poetry config virtualenvs.in-project true
-	cat requirements.txt | xargs poetry add		#загрузить зависимости из requirements.txt
-	poetry init									#инициализация нового проекта
+	cat requirements.txt | xargs poetry add					#загрузить зависимости из requirements.txt
+	poetry init								#инициализация нового проекта
 	poetry env use <path_to_python>
 	poetry install 								#установка зависимостей
 	poetry update								#обновление зависимостей
@@ -302,8 +304,8 @@
 	poetry build								#собрать наш пакет
 	poetry publish								#публикация на pypi
 	poetry run python <file_name>
-	poetry add (--dev) <package_name>			#установка пакета (только dev)
-	poetry lock									#фиксация зависимостей для прода
+	poetry add (--dev) <package_name>					#установка пакета (только dev)
+	poetry lock								#фиксация зависимостей для прода
 	poetry export -f requirements.txt --without-hashes > requirements.txt	#Сохранение зависимостей в файл
 	
 	
