@@ -199,13 +199,23 @@
  	create database site_db;
 	grant all privileges on database site_db to tester;
  	
-	
+#MONGODB
+ #General
+ 	sudo docker exec -it mongo bash	
+ 	mongosh -> use admin -> db.createUser({user:'login',pwd:'pwd',roles:[{role:'readWrite',db:'db'}]})
+ 	mongosh -> use admin -> db.auth('login','pwd')
+ 	mongosh --u "login" --p "pwd" --authenticationDatabase "admin"
+ 	
+ 	
 
 #GIT
  #General
 	git config --global user.name "Alexander"
 	git config --global user.email "as.frantsev@gmail.com"
 	git config pull.rebase true
+	git config merge.tool vimdiff
+	git config merge.conflictstyle diff3
+	git config merge.prompt false
  #Имеем репозиторий
 	git init
 	git remote add origin git@github.com:<user>/<repository>.git
@@ -219,7 +229,8 @@
 	git reflog 									# история изменений
 	git show <commit_sha>							# посмотреть коммит
 	git restore <file_name> (--staged)					# вернуть изменения (если уже в индексе)
-	git reset (--hard)							# вернуть все изменения к глобальной версии
+	git reset --hard							# вернуть все изменения к глобальной версии
+	git reset HEAD~1							# удалить последний комит
 	git diff (--staged)							# сравнение с последним коммитом
 	git diff branch1 branch2						# сравнить 2 ветки
 	git checkout master							# переключение на ветку master
@@ -227,6 +238,10 @@
 	git merge branch1							# к текущей ветке примерджить ветку branch1
 	git branch -d branch1							# удалить branch1
 	git rebase
+	git mergetool
+	  ctr+w - переключение между окнами					
+	  :diffg LO / BA / RE - какую ветку взять local / base / remote	
+	  :wqa - выход с сохранением
  #Стратегии ветвления
    #Git Flow
 	Ключевая ветка main, develop рабочая ветка, от которой отпочковываются ветки feature и release
@@ -281,6 +296,8 @@
 	docker rm 0529d842a4 ff0a34kb						#удалет 2 контейнера по их ID
 	docker rm $(docker ps -a -q -f status=exited) 				#удалет все завершенные контейнеры
 	docker stop 0529d842a4							#остановка контейнера
+	docker build --no-cache -t <name> .
+	docker-compose up --no-deps --build <name>
 	docker run -d -P -rm --name <friendly_name> <cont_name>
 		-d (detached) в отдельном процессе
 		-P открытые порты делает публичными
