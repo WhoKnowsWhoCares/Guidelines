@@ -8,6 +8,20 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 torch = "2.0.0"
+gym = {extras = ["mujoco"], version = "^0.26.2"}
+pygame = "^2.5.1"
+gymnasium = "^0.29.1"
+matplotlib = "^3.8.0"
+imageio = "^2.31.3"
+pyyaml = "^6.0.1"
+stable-baselines3 = "^2.1.0"
+swig = "^4.1.1"
+box2d-py = "^2.3.8"
+tensorboard = "^2.14.0"
+wasabi = "^1.1.2"
+torchrl = "^0.1.1"
+tqdm = "^4.66.1"
+iprogress = "^0.4"
 
 
 [tool.poetry.group.dev.dependencies]
