@@ -5,8 +5,9 @@
 	/etc/nginx/sites-available/
  #General
 	lsb_release -a 								#Узнать сборку системы
-	lsblk												#Список подключеных устройств
+	lsblk									#Список подключеных устройств
 	nvidia-smi								#Инфо по ресурсам видеокарты
+	sudo netstat -ntlp							#Занятые порты
 	ps aux | grep -i firefox 						#Поиск pid по имени
 	sudo su 								#Смена пользователя на root 
 	scp user@11.22.33.44:/home/user/file ~/Downloads/			#Скопировать файлы с сервера на текущ комп
@@ -32,7 +33,7 @@
  #Generate ssl certificate
 	sudo snap install core; sudo snap refresh core
 	sudo snap install --classic certbot
-	sudo ln -s /snap/bin/certbot /usr/bin/certbot		#ссылка на файл
+	sudo ln -s /snap/bin/certbot /usr/bin/certbot				#ссылка на файл
 	sudo certbot --nginx
  #Wireguard
 	apt install wireguard			
@@ -119,7 +120,7 @@
 	python manage.py migrate
 	# Не забыть при первом старте проинициализировать БД: python manage.py makemigrations main 
 	python manage.py sqlmigrate main 0001					#Для восстановления одной из миграций указать App, version
-	python manage.py shell								#Использование питона для работы с объектами проекта
+	python manage.py shell							#Использование питона для работы с объектами проекта
 	python manage.py createsuperuser					#Создание админской учетки
 	pip freeze > requiremints.txt						#Сохранить список необходимых пакетов
 	
@@ -128,16 +129,16 @@
  	$ export FLASK_APP=hello.py						#Указываем точку входа
 	$ export FLASK_DEBUG=1							#Режим дебага
 	$ export FLASK_ENV=development
-	$ flask run										#Старт приложения
-	$ flask db upgrade								#Обновить базы данных
+	$ flask run								#Старт приложения
+	$ flask db upgrade							#Обновить базы данных
 	
-	$ flask shell									#Добавление в базу через командную строку
+	$ flask shell								#Добавление в базу через командную строку
 	> from hello import User
 	> user_john = User(username='john')
 	> db.session.add_all([user_john])
 	> db.session.commit()
 	
-	$ flask test									#Прогнать тесты
+	$ flask test								#Прогнать тесты
 
 #UNICORN
  #Settings for service
@@ -187,10 +188,18 @@
 	sudo nginx -t
 	sudo service nginx restart
 
+
+#CLICKHOUSE
+	config files: /etc/clickhouse-server/
+	systemctl status clickhouse-server
+
+
 #POSTGRES
+	config files: /etc/postgresql/14/main/
+	systemctl status postgresql
  #General
  	$ sudo -u postgres psql							#Переход в командную строку
- 	\q												#Выход из еомандной строки
+ 	\q									#Выход из еомандной строки
  	createuser --interactive
  	create user tester with password 'password';
 	alter user tester superuser;
@@ -198,6 +207,7 @@
  	createdb <db_name>;
  	create database site_db;
 	grant all privileges on database site_db to tester;
+
  	
 #MONGODB
  #General
@@ -225,8 +235,8 @@
  #Копируем из 
 	fit clone git@github.com:<user>/<repository>.git
 	git rm <file_name>
-	git tag -a <tag_name> -m '<description>' 	#тэгируем коммит
-	git reflog 									# история изменений
+	git tag -a <tag_name> -m '<description>' 				# тэгируем коммит
+	git reflog 								# история изменений
 	git show <commit_sha>							# посмотреть коммит
 	git restore <file_name> (--staged)					# вернуть изменения (если уже в индексе)
 	git reset --hard							# вернуть все изменения к глобальной версии
@@ -289,7 +299,7 @@
 	sudo curl -fsSL get.docker.com | sh					#установка
 	sudo gpasswd -a $USER docker
 	newgrp docker
-
+	
 	docker pull <cont_name>							#скачать образ
 	docker images								#список доступных образов
 	docker ps -a 								#список всех использованных котейнеров
@@ -297,7 +307,6 @@
 	docker rm $(docker ps -a -q -f status=exited) 				#удалет все завершенные контейнеры
 	docker stop 0529d842a4							#остановка контейнера
 	docker build --no-cache -t <name> .
-	docker-compose up --no-deps --build <name>
 	docker run -d -P -rm --name <friendly_name> <cont_name>
 		-d (detached) в отдельном процессе
 		-P открытые порты делает публичными
@@ -307,6 +316,13 @@
 	docker port <friendly_name>						#список используемых портов
 	sudo docker exec -it <docker_name> bash					#зайти в командную строку контейнера
 	docker logs <docker_name>						#логи контейнера
+	docker commit $(docker ps -lq) my-image					#создать свой образ из последнего контейнера 
+	docker tag my-image <ip-адрес сервера>:5000/my-image:latest		#добавить тег
+	docker login <ip-адрес сервера>:5000					#логин к registry
+	docker push <ip-адрес сервера>:5000/my-image:latest
+	docker pull <ip-адрес сервера>:5000/my-image:latest
+	docker compose up --no-deps --build <name>
+	docker compose down --volumes --remove-orphans --rmi all
 
 
 #Poetry

@@ -1,0 +1,27 @@
+stages:
+    - build-image-prod
+    - deploy-prod
+
+build-image-prod:
+    stage: build-image-prod
+    variables:
+      BRANCH: 'prod'
+    only:
+      refs:
+        - prod
+    tags:
+      - build
+    script:
+      - bash ci-script/build.sh ci-config/env.prod
+  
+deploy-prod:
+    stage: deploy-prod
+    variables:
+      BRANCH: 'prod'
+    only:
+      refs:
+        - prod
+    tags:
+      - prod
+    script:
+      - bash ci-script/deploy.sh ci-config/env.prod
