@@ -4,8 +4,8 @@ __author__ = 'Alexander'
 
 # Обеспечим совместимость с Python 2 и 3
 # pip install future
-from __future__ import (absolute_import, division,
-                        print_function, unicode_literals)
+# from __future__ import (absolute_import, division,
+#                         print_function, unicode_literals)
 
 # отключим предупреждения Anaconda
 import warnings
@@ -61,7 +61,7 @@ df = df.replace({'Voice mail plan': d})
 df.head()
 
 #ГРУППИРОВКА ДАННЫХ
-df.groupby(by=grouping_columns)[columns_to_show].function() #в общем случае
+# df.groupby(by=grouping_columns)[columns_to_show].function() #в общем случае
 columns_to_show = ['Total day minutes', 'Total eve minutes', 'Total night minutes']
 df.groupby(['Churn'])[columns_to_show].describe(percentiles=[])
 #Сделаем то же самое, но немного по-другому, передав в agg список функций:

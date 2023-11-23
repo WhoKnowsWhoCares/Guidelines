@@ -13,7 +13,6 @@
 	scp user@11.22.33.44:/home/user/file ~/Downloads/			#Скопировать файлы с сервера на текущ комп
 	autossh -N -R 2222:localhost:22 user@server				#Создать тунель с сервера 2222 на локалхост 22
 	chmod 600 <file>
-	sudo netstat -tupln
 	sudo systemctl daemon-reload
 	sudo systemctl enable <service>
 	sudo systemctl start <service>
@@ -199,7 +198,10 @@
 	systemctl status postgresql
  #General
  	$ sudo -u postgres psql							#Переход в командную строку
+ 	$ psql -U <user> -d <database>						#Подключение к database за пользователя user
  	\q									#Выход из еомандной строки
+ 	\dt									#Список таблиц базы
+ 	\l
  	createuser --interactive
  	create user tester with password 'password';
 	alter user tester superuser;
@@ -252,6 +254,12 @@
 	  ctr+w - переключение между окнами					
 	  :diffg LO / BA / RE - какую ветку взять local / base / remote	
 	  :wqa - выход с сохранением
+ #Git-lfs
+ 	$ sudo apt install git-lfs
+ 	git lfs install
+	git lfs track "*.pkl"
+	git add .gitattributes
+	git commit -m "update .gitattributes"
  #Стратегии ветвления
    #Git Flow
 	Ключевая ветка main, develop рабочая ветка, от которой отпочковываются ветки feature и release
