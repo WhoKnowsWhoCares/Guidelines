@@ -25,6 +25,11 @@ transformers = "4.25.1"
 ftfy = "^6.1.3"
 accelerate = "^0.25.0"
 torchvision = "^0.16.2"
+minai = "^0.0.1"
+datasets = "^2.16.1"
+torcheval = "^0.0.7"
+fastai = "^2.7.13"
+timm = "^0.9.12"
 
 
 [tool.poetry.group.dev.dependencies]

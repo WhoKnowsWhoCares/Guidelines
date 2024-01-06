@@ -6,3 +6,5 @@ NN
 .venv/
 *.zip
 *.csv
+__pycache__
+data

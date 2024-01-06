@@ -11,6 +11,7 @@ from .conv import *
 from .learner import *
 from .activations import *
 from .init import *
+import matplotlib.pyplot as plt
 
 # %% ../nbs/12_accel_sgd.ipynb 45
 class BaseSchedCB(Callback):
