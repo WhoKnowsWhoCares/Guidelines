@@ -10,7 +10,9 @@
 	lsb_release -a 								#Узнать сборку системы
 	lsblk									#Список подключеных устройств
 	nvidia-smi								#Инфо по ресурсам видеокарты
+	watch -n 0.5 nvidia-smi							#Инфо по ресурсам видеокарты с автобновлением
 	sudo x-ui								#Команды настройки xray
+	sudo journalctl -b || grep <name>					#Искать в журнале
 	sudo dpkg -i <file>							#Установить из файла
 	sudo netstat -ntlp							#Занятые порты
 	ps aux | grep -i firefox 						#Поиск pid по имени
@@ -30,6 +32,13 @@
 	echo $(htpasswd -nB <user>) | sed -e s/\\$/\\$\\$/g                     #Зашифровать пароль
 	python3 -m env .venv							#Создать .venv
 	python3 -m pip install --upgrade pip
+	pip install -r requirements.txt
+	htpasswd -B registry.password <username>				#Создать логин-пароль в файл registry.password registry для
+ #General python 
+ 	sudo add-apt-repository ppa:deadsnakes/ppa
+ 	sudo apt install python3.12
+ 	sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
+ 	sudo update-alternatives --config python3
  #General server config
 	apt update && apt upgrade -y						#Обновить сервер
 	sudo nano /etc/ssh/sshd_config						#После добавления ssh ключа
