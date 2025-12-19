@@ -4,7 +4,9 @@
 	/etc/systemd/system/							#Папка с описанием сервисов дл systemd
 	/etc/nginx/sites-available/
 	/etc/samba/
+	/etc/hosts								#Не работает роутинг через vless, добавить тут
 	/etc/ssh/sshd_config
+	/etc/systemd/resolved.conf						#dns: systemd-resolved.service
 	/etc/default/grub или /boot/cmdline.txt -> add "apparmor=1 lsm=lockdown,yama,apparmor"
  #General
 	lsb_release -a 								#Узнать сборку системы
@@ -14,7 +16,9 @@
 	sudo x-ui								#Команды настройки xray
 	sudo journalctl -b || grep <name>					#Искать в журнале
 	sudo dpkg -i <file>							#Установить из файла
-	sudo netstat -ntlp							#Занятые порты
+	dpkg -l | grep postgres
+	sudo apt remove --purge <name>
+	sudo ln -s <file_path> <path_to>
 	ps aux | grep -i firefox 						#Поиск pid по имени
 	sudo su 								#Смена пользователя на root 
 	sudo passwd <user>							#сменить пароль
@@ -30,11 +34,27 @@
 	fg									#Вернуть процесс из фона
 	sudo journalctl -f							#Системный лог
 	echo $(htpasswd -nB <user>) | sed -e s/\\$/\\$\\$/g                     #Зашифровать пароль
-	python3 -m env .venv							#Создать .venv
+	htpasswd -B registry.password <username>				#Создать логин-пароль в файл registry.password registry для
+  #Network Mgmt
+  	sudo netstat -ntlp							#Занятые порты
+  	ip -4 -br a								#подключенные сети
+  	ip route get 100.96.0.10						#этапы прохождения пакетов
+  	mtr 192.168.10.12							#trace
+  	tcpdump -ni eth0 icmp							#проверка на получение icmp через eth0
+ #General python 
+  #Dev-Stack:
+	BD:		Postgres + Redis
+  	Frameworks:	Django -> FastAPI
+  	DepsMgr: 	pip -> Poetry -> uv
+  	Linter:		Flake8 + Black -> ruff
+  	TypeCheck:	MyPy / Pyright
+  	Query:		RabbitMQ
+  	DevOps:		Docker + CI/CD
+  	Other:		SQLAlchemy(работа с БД) + Pydantic(валидация и хранение данных) + PyTest(тесты)
+  #Commands
+	python3 -m venv .venv							#Создать .venv
 	python3 -m pip install --upgrade pip
 	pip install -r requirements.txt
-	htpasswd -B registry.password <username>				#Создать логин-пароль в файл registry.password registry для
- #General python 
  	sudo add-apt-repository ppa:deadsnakes/ppa
  	sudo apt install python3.12
  	sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
@@ -54,10 +74,9 @@
 	ssh -i ~/.ssh/<private_key> -o UserKnownHostsFile=~/.ssh/known_hosts  username@remote_host
 	autossh -fnNT -L *:65000:127.0.0.1:65000 hetzner			#Создать тунель на сервер hetzner для всех подключающихся на порт 65000
  #Generate ssl certificate
-	sudo snap install core; sudo snap refresh core
-	sudo snap install --classic certbot
-	sudo ln -s /snap/bin/certbot /usr/bin/certbot				#ссылка на файл
+ 	sudo apt install certbot, python3-pip, python3-certbot-nginx
 	sudo certbot --nginx
+
  #Wireguard
 	apt install wireguard			
 	echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
@@ -69,6 +88,7 @@
 	#Server config
 		[Interface]
 		PrivateKey = <server_private_key>
+		Address = 10.0.0.1/24
 		ListenPort = 51830
 		PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 		PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
@@ -94,6 +114,7 @@
 	systemctl restart wg-quick@wg0.service
 	
 	sudo wg setconf wg0 wg_lenovo.conf
+	или sudo wg-quick up/down wg_lenovo
 	sudo systemctl status wg-quick@wg_lenovo.service			#Управление из командной строки
 	
  #UFW
@@ -210,7 +231,7 @@
 		return 301 https://domain$request_uri;
 	}
 	sudo nginx -t
-	sudo service nginx restart
+	sudo systemctl restart nginx или sudo service nginx restart
 
 
 #CLICKHOUSE
@@ -365,6 +386,7 @@
 	docker pull <ip-адрес сервера>:5000/my-image:latest
 	docker compose up --no-deps --build <name>
 	  docker compose -f <docker-compose.yml> up
+	  docker compose up -d --forece-recreate
 	docker compose down --volumes --remove-orphans --rmi all
 
 
@@ -385,7 +407,26 @@
 	poetry add (--dev) <package_name>					#установка пакета (только dev)
 	poetry lock								#фиксация зависимостей для прода
 	poetry export -f requirements.txt --without-hashes > requirements.txt	#Сохранение зависимостей в файл
-	
+
+#UV
+	curl -LsSf https://astral.sh/uv/install.sh | sh
+	uv python list
+	uv python install 3.12.2						#Установить
+	uv python pin 3.12.2							#Закрепить в папке проекта версию в .python-version
+	uv venv
+	uv run --with <package> <filename.py> 					#Найдет .python-version и скачает если нужно питон, пакеты, запустит код
+	uv init									#Инициализировать проект
+	uv add [--dev] <package>						#Добавить пакет
+	uv pip install -r requirements.txt
+	uv tree									#Зависимости
+	Добавить в начало файла .py:
+		# !/usr/bin/env -S uv run --script				#позволяет запускать файл без uv run
+		# /// script							#нужные зависимости
+		# requires-python = ">=3.12"
+		# dependencies = ["..."]
+		# ///
+	uvx ruff
+	uvx ruff check . --fix
 	
 #Home Assistant
   https://ihome.frantstech.site/hassio/system
