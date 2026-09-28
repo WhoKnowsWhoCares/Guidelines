@@ -7,4 +7,4 @@ NN
 *.zip
 *.csv
 __pycache__
-data
+data/

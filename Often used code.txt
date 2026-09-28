@@ -60,11 +60,11 @@
  	sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
  	sudo update-alternatives --config python3
  #General server config
-	apt update && apt upgrade -y						#Обновить сервер
+	sudo apt update && apt upgrade -y						#Обновить сервер
 	sudo nano /etc/ssh/sshd_config						#После добавления ssh ключа
 		PasswordAuthentication no
 		RootLogin no
-	service ssh restart
+	sudo service ssh restart
  #Generate ssh key
 	ssh-keygen -t rsa 							#На рабоче машине
 	eval $(ssh-agent)
